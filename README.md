@@ -2,7 +2,7 @@
 
 Projeto acadêmico em TypeScript para gerenciamento de times de futebol, aplicando conceitos de Programação Orientada a Objetos (POO) e Injeção de Dependência (Dependency Injection – DI).
 
-⚙️ Tecnologias
+Tecnologias
 
 Node.js v22+
 TypeScript
@@ -33,7 +33,7 @@ Facilitar testes unitários com repositórios falsos (mocks)
 
 Estruturar um projeto Node.js + TypeScript de forma modular
 
-👨‍💻 Autor
+Autor
 
 Leonardo Hirt – UTFPR
 
