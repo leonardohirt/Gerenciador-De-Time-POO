@@ -4,9 +4,11 @@ Projeto acadêmico em TypeScript para gerenciamento de times de futebol, aplican
 
 Tecnologias
 
-Node.js v22+
-TypeScript
-ts-node - para execução direta de arquivos .ts
+° Node.js v22+
+
+° TypeScript
+
+° ts-node - para execução direta de arquivos .ts
 
 # 1. Como rodar o projeto
 
