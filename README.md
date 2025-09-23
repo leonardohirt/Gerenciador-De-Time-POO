@@ -4,28 +4,28 @@ Projeto acadêmico em TypeScript para gerenciamento de times de futebol, aplican
 
 Tecnologias
 
-° Node.js v22+
+* Node.js v22+
 
-° TypeScript
+* TypeScript
 
-° ts-node - para execução direta de arquivos .ts
+* ts-node - para execução direta de arquivos .ts
 
-# 1. Como rodar o projeto
+# Como rodar o projeto
 
-# Clone o repositório
+## 1. Clone o repositório
     git clone <URL-do-repo>
     cd Gerenciamento-De-Time-POO
 
-# 2. Instale as dependências
+## 2. Instale as dependências
 
     npm install
 
-# 3. Compile e execute com ts-node
+## 3. Compile e execute com ts-node
 
     npx ts-node src/index.ts
 
 
-# Objetivos de Aprendizado
+## Objetivos de Aprendizado
 
 Aplicar POO em TypeScript
 
