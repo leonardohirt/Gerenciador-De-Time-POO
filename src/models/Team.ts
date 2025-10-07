@@ -8,22 +8,28 @@ export class Team {
   constructor(public name: string) {}
 
   addPlayer(player: Player): void {
+    if (this.players.find(p => p.name === player.name)) {
+      console.log(`Jogador "${player.name}" já está no time.\n`);
+      return;
+    }
     this.players.push(player);
+    console.log(`Jogador "${player.name}" adicionado ao time "${this.name}".\n`);
   }
 
   setCoach(coach: Coach): void {
     this.coach = coach;
+    console.log(`Técnico "${coach.name}" definido para o time "${this.name}".\n`);
   }
 
-  getPlayers(): Player[] {
+  getJogadores(): Player[] {
     return this.players;
   }
 
-  getCoach(): Coach | undefined {
+  getTecnico(): Coach | undefined {
     return this.coach;
   }
 
-  getName(): string {
+  getNome(): string {
     return this.name;
   }
 }

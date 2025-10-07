@@ -9,6 +9,6 @@ export class Coach extends People {
   }
 
   showInfo(): void {
-    console.log(`Coach: ${this.name} - ${this.experience} years of experience`);
+    console.log(`Técnico: ${this.name} - ${this.experience} anos de experiência`);
   }
 }

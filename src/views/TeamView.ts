@@ -2,37 +2,39 @@ import { Team } from "../models/Team";
 
 export class TeamView {
   displayTeam(team: Team): void {
-    console.log(`\n Team: ${team.getName()}`);
+    console.log(`\nTime: ${team.getNome()}`);
 
-    if (team.getCoach()) {
-      team.getCoach()!.showInfo();
+    const coach = team.getTecnico();
+    if (coach) {
+      coach.showInfo();
     } else {
-      console.log("No coach defined.");
+      console.log("Nenhum técnico definido.");
     }
 
-    if (team.getPlayers().length === 0) {
-      console.log("No players in the team.");
-    } else {
-      console.log("Players:");
-      team.getPlayers().forEach(player => player.showInfo());
-    }
-  }
-
-  displayPlayers(players: ReturnType<Team["getPlayers"]>): void {
+    const players = team.getJogadores();
     if (players.length === 0) {
-      console.log("No players to display.");
+      console.log("Nenhum jogador no time.");
     } else {
-      console.log("\n Players:");
+      console.log("Jogadores:");
       players.forEach(player => player.showInfo());
     }
   }
 
-  displayCoach(coach: ReturnType<Team["getCoach"]>): void {
+  displayPlayers(players: ReturnType<Team["getJogadores"]>): void {
+    if (players.length === 0) {
+      console.log("Nenhum jogador para exibir.");
+    } else {
+      console.log("\nJogadores:");
+      players.forEach(player => player.showInfo());
+    }
+  }
+
+  displayCoach(coach: ReturnType<Team["getTecnico"]>): void {
     if (coach) {
-      console.log("\n Coach:");
+      console.log("\nTécnico:");
       coach.showInfo();
     } else {
-      console.log("No coach to display.");
+      console.log("Nenhum técnico para exibir.");
     }
   }
 }

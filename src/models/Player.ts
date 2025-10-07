@@ -11,6 +11,6 @@ export class Player extends People {
   }
 
   showInfo(): void {
-    console.log(`${this.name} - #${this.number} - Position: ${this.position}`);
+    console.log(`Jogador: ${this.name} - Camisa: ${this.number} - Posição: ${this.position}`);
   }
 }
