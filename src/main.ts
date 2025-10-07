@@ -1,21 +1,27 @@
 import { TeamController } from "./controllers/TeamController";
 import { Position } from "./models/Position";
+import { Player } from "./models/Player";
+import { Coach } from "./models/Coach";
+
 import promptSync from "prompt-sync";
 
 const prompt = promptSync({ sigint: true });
 const controller = new TeamController();
 
-function mainMenu() {
+function timeMenu(teamName: string) {
+  const team = controller.db.getTeamByName(teamName);
+  if (!team) {
+    console.log("Time não encontrado.");
+    return;
+  }
+
   while (true) {
-    console.log("\n=== Menu Principal ===");
-    console.log("1. Criar time");
-    console.log("2. Adicionar jogador");
-    console.log("3. Remover jogador");
-    console.log("4. Definir técnico");
-    console.log("5. Mostrar time atual");
-    console.log("6. Listar todos os times");
-    console.log("7. Remover time");
-    console.log("0. Sair");
+    console.log(`\n=== Menu do Time: ${teamName} ===`);
+    console.log("1. Adicionar jogador");
+    console.log("2. Remover jogador");
+    console.log("3. Definir técnico");
+    console.log("4. Mostrar time");
+    console.log("0. Voltar ao menu principal");
 
     const choice = prompt("Escolha uma opção: ");
 
@@ -44,47 +50,80 @@ function mainMenu() {
           console.log("Posição inválida.");
           break;
         }
-        controller.addPlayer(playerName, number, position);
+        const player = new Player(playerName, number, position);
+        controller.db.addPlayerToTeam(teamName, player);
+        console.log(`Jogador ${playerName} adicionado ao time ${teamName}.`);
+        break;
+      }
+
+      case "2": {
+        const playerToRemove = prompt("Nome do jogador a remover: ");
+        controller.db.removePlayerFromTeam(teamName, playerToRemove);
         break;
       }
 
       case "3": {
-        const teamToRemovePlayer = controller.getTeam();
-        if (!teamToRemovePlayer) {
-          console.log("Nenhum time criado.");
-          break;
-        }
-        const playerToRemove = prompt("Nome do jogador a remover: ");
-        controller.db.removePlayerFromTeam(
-          teamToRemovePlayer.getNome(),
-          playerToRemove
-        );
+        const coachName = prompt("Nome do técnico: ");
+        const experience = parseInt(prompt("Experiência (anos): "));
+        const coach = new Coach(coachName, experience);
+        controller.db.setCoachToTeam(teamName, coach);
+        console.log(`Técnico ${coachName} definido para o time ${teamName}.`);
         break;
       }
 
       case "4": {
-        const teamForCoach = controller.getTeam();
-        if (!teamForCoach) {
-          console.log("Nenhum time criado. Crie um time primeiro.");
-          break;
-        }
-        const coachName = prompt("Nome do técnico: ");
-        const experience = parseInt(prompt("Experiência (anos): "));
-        controller.setCoach(coachName, experience);
+        const team = controller.db.getTeamByName(teamName);
+        if (team) controller.showTeam(); 
         break;
       }
 
-      case "5":
-        controller.showTeam();
-        break;
+      case "0":
+        return; 
 
-      case "6":
+      default:
+        console.log("Opção inválida.");
+    }
+  }
+}
+
+function mainMenu() {
+  while (true) {
+    console.log("\n=== Menu Principal ===");
+    console.log("1. Criar time");
+    console.log("2. Selecionar time");
+    console.log("3. Listar todos os times");
+    console.log("4. Remover time");
+    console.log("0. Sair");
+
+    const choice = prompt("Escolha uma opção: ");
+
+    switch (choice) {
+      case "1": {
+        const teamName = prompt("Nome do time: ");
+        controller.createTeam(teamName);
+        console.log(`Time ${teamName} criado.`);
+        break;
+      }
+
+      case "2": {
+        const teamName = prompt("Nome do time que deseja selecionar: ");
+        const team = controller.db.getTeamByName(teamName);
+        if (!team) {
+          console.log("Time não encontrado.");
+          break;
+        }
+        timeMenu(teamName);
+        break;
+      }
+
+      case "3":
         controller.listAllTeams();
         break;
 
-      case "7": {
+      case "4": {
         const removeTeamName = prompt("Nome do time a remover: ");
         controller.db.removeTeam(removeTeamName);
+        console.log(`Time ${removeTeamName} removido.`);
         break;
       }
 
