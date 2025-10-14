@@ -6,72 +6,94 @@ import { Position } from "../models/Position";
 import { Database } from "../db/database";
 
 export class TeamController {
-  public db: Database = new Database(); 
-  private team!: Team;
+  private db: Database;
   private view: TeamView;
+  private nextId = 1; 
 
-  constructor() {
-    this.view = new TeamView();
+  constructor(database: Database, view: TeamView) {
+    this.db = database;
+    this.view = view;
   }
 
-  createTeam(teamName: string): void {
-    this.team = new Team(teamName);
-    this.db.addTeam(this.team);
-    console.log(`Time "${teamName}" criado com sucesso.\n`);
+  public createTeam(teamName: string): void {
+    const newTeam = new Team(teamName);
+    const success = this.db.addTeam(newTeam);
+
+    if (success) {
+      this.view.displayMessage(`Time "${teamName}" criado com sucesso.\n`);
+    } else {
+      this.view.displayError(`Time "${teamName}" já existe.`);
+    }
   }
 
-  addPlayer(name: string, number: number, position: Position): void {
-    if (!this.team) {
-      console.log("Nenhum time criado. Crie um time primeiro.\n");
+  public addPlayerToTeam(teamName: string, playerData: { name: string; age: number; number: number; position: Position }): void {
+    const team = this.db.findTeamByName(teamName);
+    if (!team) {
+      this.view.displayError(`Time "${teamName}" não encontrado.`);
       return;
     }
 
-    const player = new Player(name, number, position);
-    this.team.addPlayer(player);
-    this.db.addPlayerToTeam(this.team.name, player);
-    console.log(`Jogador "${name}" adicionado ao time "${this.team.name}".\n`);
+    const player = new Player(
+      this.nextId++,
+      playerData.name,
+      playerData.age,
+      playerData.number,
+      playerData.position
+    );
+
+    team.addPlayer(player);
   }
 
-  setCoach(name: string, experience: number): void {
-    if (!this.team) {
-      console.log("Nenhum time criado. Crie um time primeiro.\n");
+  public setCoachToTeam(teamName: string, coachData: { name: string; age: number; experience: number }): void {
+    const team = this.db.findTeamByName(teamName);
+    if (!team) {
+      this.view.displayError(`Time "${teamName}" não encontrado.`);
       return;
     }
 
-    const coach = new Coach(name, experience);
-    this.team.setCoach(coach);
-    this.db.setCoachToTeam(this.team.name, coach);
-    console.log(`Técnico "${name}" definido para o time "${this.team.name}".\n`);
+    const coach = new Coach(
+      this.nextId++,
+      coachData.name,
+      coachData.age,
+      coachData.experience
+    );
+
+    team.setCoach(coach);
   }
 
-  showTeam(): void {
-    if (!this.team) {
-      console.log("Nenhum time criado. Crie um time primeiro.\n");
+  public removeTeamByName(teamName: string): void {
+    const success = this.db.removeTeamByName(teamName);
+    if (success) {
+      this.view.displayMessage(`Time "${teamName}" removido com sucesso.\n`);
+    } else {
+      this.view.displayError(`Time "${teamName}" não encontrado.`);
+    }
+  }
+
+  public removePlayerFromTeam(teamName: string, playerId: number): void {
+    const team = this.db.findTeamByName(teamName);
+    if (!team) {
+      this.view.displayError(`Time "${teamName}" não encontrado.`);
       return;
     }
 
-    console.log("\n=== Detalhes do Time Atual ===");
-    this.view.displayTeam(this.team);
-    console.log("---------------------------\n");
+    const success = team.removePlayerById(playerId);
+    if (!success) {
+      this.view.displayError(`Jogador com ID ${playerId} não encontrado no time "${teamName}".`);
+    }
   }
 
-  listAllTeams(): void {
-    const teams = this.db.listTeams();
-
-    if (teams.length === 0) {
-      console.log("\nNenhum time cadastrado ainda.\n");
+  public showTeamByName(teamName: string): void {
+    const team = this.db.findTeamByName(teamName);
+    if (!team) {
+      this.view.displayError(`Time "${teamName}" não encontrado.`);
       return;
     }
-
-    console.log("\n=== Times cadastrados no banco ===");
-    teams.forEach(team => {
-      this.view.displayTeam(team);
-      console.log("---------------------------");
-    });
-    console.log("");
+    this.view.displayTeam(team);
   }
 
-  getTeam(): Team {
-    return this.team;
+  public listAllTeams(): void {
+    const teams = this.db.listAllTeams();
+    this.view.displayAllTeams(teams);
   }
 }

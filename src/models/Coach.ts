@@ -2,13 +2,21 @@ import { People } from "./People";
 
 export class Coach extends People {
   constructor(
-    public name: string,
+    id: number,
+    name: string,
+    age: number,
     public experience: number
   ) {
-    super(name);
+
+    super(id, name, age);
   }
 
-  showInfo(): void {
-    console.log(`Técnico: ${this.name} - ${this.experience} anos de experiência`);
+  public showInfo(): void {
+    console.log("--- Ficha do Técnico ---");
+    console.log(`ID: ${this.id}`);
+    console.log(`Nome: ${this.name}`);
+    console.log(`Idade: ${this.age}`);
+    console.log(`Experiência: ${this.experience} anos`);
+    console.log("------------------------");
   }
 }

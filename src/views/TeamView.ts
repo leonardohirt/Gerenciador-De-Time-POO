@@ -1,40 +1,27 @@
 import { Team } from "../models/Team";
 
 export class TeamView {
-  displayTeam(team: Team): void {
-    console.log(`\nTime: ${team.getNome()}`);
 
-    const coach = team.getTecnico();
-    if (coach) {
-      coach.showInfo();
-    } else {
-      console.log("Nenhum técnico definido.");
-    }
-
-    const players = team.getJogadores();
-    if (players.length === 0) {
-      console.log("Nenhum jogador no time.");
-    } else {
-      console.log("Jogadores:");
-      players.forEach(player => player.showInfo());
-    }
+  public displayTeam(team: Team): void {
+    team.showInfo();
   }
 
-  displayPlayers(players: ReturnType<Team["getJogadores"]>): void {
-    if (players.length === 0) {
-      console.log("Nenhum jogador para exibir.");
-    } else {
-      console.log("\nJogadores:");
-      players.forEach(player => player.showInfo());
+  public displayAllTeams(teams: Team[]): void {
+    if (teams.length === 0) {
+      this.displayMessage("\nNenhum time cadastrado ainda.\n");
+      return;
     }
+
+    console.log("\n============== TIMES CADASTRADOS ==============");
+    teams.forEach(team => team.showInfo());
   }
 
-  displayCoach(coach: ReturnType<Team["getTecnico"]>): void {
-    if (coach) {
-      console.log("\nTécnico:");
-      coach.showInfo();
-    } else {
-      console.log("Nenhum técnico para exibir.");
-    }
+  public displayMessage(message: string): void {
+    console.log(message);
+  }
+
+  public displayError(message: string): void {
+ 
+    console.error(`❌ ERRO: ${message}\n`);
   }
 }
