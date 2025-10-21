@@ -9,16 +9,14 @@ export class Player extends People {
     public number: number,
     public position: Position
   ) {
+
     super(id, name, age);
   }
-  
+
   public showInfo(): void {
     console.log("--- Ficha do Jogador ---");
-    console.log(`ID: ${this.id}`);
-    console.log(`Nome: ${this.name}`);
-    console.log(`Idade: ${this.age}`);
-    console.log(`Camisa: ${this.number}`);
-    console.log(`Posição: ${this.position}`);
+    console.log(`ID: ${this.id} | Nome: ${this.name} | Idade: ${this.age}`);
+    console.log(`Camisa: ${this.number} | Posição: ${this.position}`);
     console.log("------------------------");
   }
 }

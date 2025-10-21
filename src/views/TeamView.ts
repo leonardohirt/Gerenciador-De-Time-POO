@@ -1,7 +1,6 @@
 import { Team } from "../models/Team";
 
 export class TeamView {
-
   public displayTeam(team: Team): void {
     team.showInfo();
   }
@@ -11,7 +10,6 @@ export class TeamView {
       this.displayMessage("\nNenhum time cadastrado ainda.\n");
       return;
     }
-
     console.log("\n============== TIMES CADASTRADOS ==============");
     teams.forEach(team => team.showInfo());
   }
@@ -21,7 +19,6 @@ export class TeamView {
   }
 
   public displayError(message: string): void {
- 
-    console.error(`❌ ERRO: ${message}\n`);
+    console.error(` ERRO: ${message}\n`);
   }
 }

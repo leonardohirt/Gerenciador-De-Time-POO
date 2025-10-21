@@ -4,9 +4,7 @@ import { Database } from "./db/database";
 import { TeamView } from "./views/TeamView";
 import promptSync from "prompt-sync";
 
-
 const prompt = promptSync({ sigint: true });
-
 const db = new Database();
 const view = new TeamView();
 const controller = new TeamController(db, view);
@@ -38,9 +36,8 @@ function timeMenu(teamName: string) {
           break;
         }
         
-
-        const position = posicoes[posChoice] as Position;
-
+        const position = posicoes[posChoice] as Position; 
+        
         controller.addPlayerToTeam(teamName, { name, age, number, position });
         break;
       }
@@ -51,11 +48,12 @@ function timeMenu(teamName: string) {
           view.displayError("ID inválido.");
           break;
         }
+      
         controller.removePlayerFromTeam(teamName, playerId);
         break;
       }
 
-      case "3": { 
+      case "3": {
         const name = prompt("Nome do técnico: ");
         const age = parseInt(prompt("Idade do técnico: "), 10);
         const experience = parseInt(prompt("Anos de experiência: "), 10);
@@ -64,7 +62,7 @@ function timeMenu(teamName: string) {
           view.displayError("Dados inválidos. Tente novamente.");
           break;
         }
-
+    
         controller.setCoachToTeam(teamName, { name, age, experience });
         break;
       }
@@ -75,7 +73,7 @@ function timeMenu(teamName: string) {
       }
 
       case "0":
-        return;
+        return; 
 
       default:
         view.displayError("Opção inválida.");
@@ -103,7 +101,7 @@ function mainMenu() {
 
       case "2": {
         const teamName = prompt("Nome do time para gerenciar: ");
-        if (db.findTeamByName(teamName)) {
+        if (db.findTeamByName(teamName)) { 
           timeMenu(teamName);
         } else {
           view.displayError("Time não encontrado.");
@@ -124,12 +122,11 @@ function mainMenu() {
 
       case "0":
         console.log("Saindo do sistema...");
-        return;
+        return; 
 
       default:
         view.displayError("Opção inválida.");
     }
   }
 }
-
 mainMenu();

@@ -6,8 +6,8 @@ import { Position } from "../models/Position";
 import { Database } from "../db/database";
 
 export class TeamController {
-  private db: Database;
-  private view: TeamView;
+  private readonly db: Database;
+  private readonly view: TeamView;
   private nextId = 1; 
 
   constructor(database: Database, view: TeamView) {
@@ -17,11 +17,11 @@ export class TeamController {
 
   public createTeam(teamName: string): void {
     const newTeam = new Team(teamName);
-    const success = this.db.addTeam(newTeam);
+    const success = this.db.addTeam(newTeam); 
 
-    if (success) {
+    if (success) { 
       this.view.displayMessage(`Time "${teamName}" criado com sucesso.\n`);
-    } else {
+    } else { 
       this.view.displayError(`Time "${teamName}" já existe.`);
     }
   }
@@ -40,8 +40,7 @@ export class TeamController {
       playerData.number,
       playerData.position
     );
-
-    team.addPlayer(player);
+    team.addPlayer(player); 
   }
 
   public setCoachToTeam(teamName: string, coachData: { name: string; age: number; experience: number }): void {
@@ -57,7 +56,6 @@ export class TeamController {
       coachData.age,
       coachData.experience
     );
-
     team.setCoach(coach);
   }
 
@@ -77,10 +75,7 @@ export class TeamController {
       return;
     }
 
-    const success = team.removePlayerById(playerId);
-    if (!success) {
-      this.view.displayError(`Jogador com ID ${playerId} não encontrado no time "${teamName}".`);
-    }
+    team.removePlayerById(playerId);
   }
 
   public showTeamByName(teamName: string): void {
@@ -94,6 +89,6 @@ export class TeamController {
 
   public listAllTeams(): void {
     const teams = this.db.listAllTeams();
-    this.view.displayAllTeams(teams);
+    this.view.displayAllTeams(teams); 
   }
 }

@@ -5,10 +5,10 @@ export class Database {
 
   public addTeam(team: Team): boolean {
     if (this.findTeamByName(team.name)) {
-      return false; 
+      return false;
     }
     this.teams.push(team);
-    return true; 
+    return true;
   }
 
   public findTeamByName(name: string): Team | undefined {
@@ -21,12 +21,10 @@ export class Database {
 
   public removeTeamByName(name: string): boolean {
     const index = this.teams.findIndex(team => team.name === name);
-
     if (index !== -1) {
       this.teams.splice(index, 1);
       return true;
     }
-
-    return false;
+    return false; 
   }
 }

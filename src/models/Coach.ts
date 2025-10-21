@@ -7,15 +7,13 @@ export class Coach extends People {
     age: number,
     public experience: number
   ) {
-
     super(id, name, age);
   }
 
+
   public showInfo(): void {
     console.log("--- Ficha do Técnico ---");
-    console.log(`ID: ${this.id}`);
-    console.log(`Nome: ${this.name}`);
-    console.log(`Idade: ${this.age}`);
+    console.log(`ID: ${this.id} | Nome: ${this.name} | Idade: ${this.age}`);
     console.log(`Experiência: ${this.experience} anos`);
     console.log("------------------------");
   }
