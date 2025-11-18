@@ -5,10 +5,13 @@ import { TeamView } from "../views/TeamView";
 import { Position } from "../models/Position";
 import { Database } from "../db/database";
 
+import { TeamNotFoundError } from "../errors/TeamNotFoundError";
+import { PlayerNotFoundError } from "../errors/PlayerNotFoundError";
+
 export class TeamController {
   private readonly db: Database;
   private readonly view: TeamView;
-  private nextId = 1; 
+  private nextId = 1;
 
   constructor(database: Database, view: TeamView) {
     this.db = database;
@@ -16,79 +19,126 @@ export class TeamController {
   }
 
   public createTeam(teamName: string): void {
-    const newTeam = new Team(teamName);
-    const success = this.db.addTeam(newTeam); 
+    try {
+      const newTeam = new Team(teamName);
+      const success = this.db.addTeam(newTeam);
 
-    if (success) { 
+      if (!success) {
+        throw new Error(`Time "${teamName}" já existe.`);
+      }
+
       this.view.displayMessage(`Time "${teamName}" criado com sucesso.\n`);
-    } else { 
-      this.view.displayError(`Time "${teamName}" já existe.`);
+    } catch (err) {
+      this.view.displayError((err as Error).message);
     }
   }
 
-  public addPlayerToTeam(teamName: string, playerData: { name: string; age: number; number: number; position: Position }): void {
-    const team = this.db.findTeamByName(teamName);
-    if (!team) {
-      this.view.displayError(`Time "${teamName}" não encontrado.`);
-      return;
-    }
+  public addPlayerToTeam(
+    teamName: string,
+    playerData: { name: string; age: number; number: number; position: Position }
+  ): void {
+    try {
+      const team = this.db.findTeamByName(teamName);
+      if (!team) {
+        throw new TeamNotFoundError(teamName);
+      }
 
-    const player = new Player(
-      this.nextId++,
-      playerData.name,
-      playerData.age,
-      playerData.number,
-      playerData.position
-    );
-    team.addPlayer(player); 
+      const player = new Player(
+        this.nextId++,
+        playerData.name,
+        playerData.age,
+        playerData.number,
+        playerData.position
+      );
+
+      team.addPlayer(player);
+      this.view.displayMessage(`Jogador "${playerData.name}" adicionado ao time "${teamName}".`);
+    } catch (err) {
+      this.view.displayError((err as Error).message);
+    }
   }
 
-  public setCoachToTeam(teamName: string, coachData: { name: string; age: number; experience: number }): void {
-    const team = this.db.findTeamByName(teamName);
-    if (!team) {
-      this.view.displayError(`Time "${teamName}" não encontrado.`);
-      return;
-    }
+  public setCoachToTeam(
+    teamName: string,
+    coachData: { name: string; age: number; experience: number }
+  ): void {
+    try {
+      const team = this.db.findTeamByName(teamName);
+      if (!team) {
+        throw new TeamNotFoundError(teamName);
+      }
 
-    const coach = new Coach(
-      this.nextId++,
-      coachData.name,
-      coachData.age,
-      coachData.experience
-    );
-    team.setCoach(coach);
+      const coach = new Coach(
+        this.nextId++,
+        coachData.name,
+        coachData.age,
+        coachData.experience
+      );
+
+      team.setCoach(coach);
+      this.view.displayMessage(`Coach "${coachData.name}" atribuído ao time "${teamName}".`);
+
+    } catch (err) {
+      this.view.displayError((err as Error).message);
+    }
   }
 
   public removeTeamByName(teamName: string): void {
-    const success = this.db.removeTeamByName(teamName);
-    if (success) {
+    try {
+      const success = this.db.removeTeamByName(teamName);
+
+      if (!success) {
+        throw new TeamNotFoundError(teamName);
+      }
+
       this.view.displayMessage(`Time "${teamName}" removido com sucesso.\n`);
-    } else {
-      this.view.displayError(`Time "${teamName}" não encontrado.`);
+    } catch (err) {
+      this.view.displayError((err as Error).message);
     }
   }
 
   public removePlayerFromTeam(teamName: string, playerId: number): void {
-    const team = this.db.findTeamByName(teamName);
-    if (!team) {
-      this.view.displayError(`Time "${teamName}" não encontrado.`);
-      return;
-    }
+    try {
+      const team = this.db.findTeamByName(teamName);
 
-    team.removePlayerById(playerId);
+      if (!team) {
+        throw new TeamNotFoundError(teamName);
+      }
+
+      const removed = team.removePlayerById(playerId);
+
+      if (!removed) {
+        throw new PlayerNotFoundError(playerId);
+      }
+
+      this.view.displayMessage(`Jogador removido com sucesso.`);
+
+    } catch (err) {
+      this.view.displayError((err as Error).message);
+    }
   }
 
   public showTeamByName(teamName: string): void {
-    const team = this.db.findTeamByName(teamName);
-    if (!team) {
-      this.view.displayError(`Time "${teamName}" não encontrado.`);
-      return;
+    try {
+      const team = this.db.findTeamByName(teamName);
+
+      if (!team) {
+        throw new TeamNotFoundError(teamName);
+      }
+
+      this.view.displayTeam(team);
+
+    } catch (err) {
+      this.view.displayError((err as Error).message);
     }
-    this.view.displayTeam(team);
   }
 
   public listAllTeams(): void {
-    const teams = this.db.listAllTeams();
-    this.view.displayAllTeams(teams); 
+    try {
+      const teams = this.db.listAllTeams();
+      this.view.displayAllTeams(teams);
+    } catch (err) {
+      this.view.displayError((err as Error).message);
+    }
   }
 }

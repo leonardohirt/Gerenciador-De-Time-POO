@@ -1,30 +1,27 @@
+import { Repository } from "../Repository/Repository";
 import { Team } from "../models/Team";
 
 export class Database {
-  private readonly teams: Team[] = [];
+  private teams = new Repository<Team>();
 
   public addTeam(team: Team): boolean {
-    if (this.findTeamByName(team.name)) {
-      return false;
-    }
-    this.teams.push(team);
+    const exists = this.teams.find(t => t.name === team.name);
+
+    if (exists) return false;
+
+    this.teams.add(team);
     return true;
   }
 
   public findTeamByName(name: string): Team | undefined {
-    return this.teams.find(team => team.name === name);
+    return this.teams.find(t => t.name === name);
   }
 
   public listAllTeams(): Team[] {
-    return [...this.teams];
+    return this.teams.getAll();
   }
 
   public removeTeamByName(name: string): boolean {
-    const index = this.teams.findIndex(team => team.name === name);
-    if (index !== -1) {
-      this.teams.splice(index, 1);
-      return true;
-    }
-    return false; 
+    return this.teams.remove(t => t.name === name);
   }
 }

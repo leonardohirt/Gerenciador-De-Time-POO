@@ -1,7 +1,7 @@
 export enum Position {
- ARMADOR = "Armador",
- ALA_ARMADOR = "Ala-Armador",
- ALA = "Ala",
- ALA_PIVO = "Ala-Pivô",
- PIVO = "Pivô"
+  PG = "Armador",
+  SG = "Ala-Armador",
+  SF = "Ala",
+  PF = "Ala-Pivô",
+  C = "Pivô",
 }
